@@ -1,0 +1,5 @@
+<ng-container *ngrxLet="dogs$ as dogs">
+  <ng-container *ngrxLet="selectedDog$ as selectedDog">
+    <app-dogs-form [selectedDog]="selectedDog" [dogs]="dogs" (submit)="onDogsFormSubmit($event)"></app-dogs-form>
+  </ng-container>
+</ng-container>

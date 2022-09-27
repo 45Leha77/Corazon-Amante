@@ -1,0 +1,12 @@
+<ng-container *ngrxLet="dogs$ as dogs">
+  <app-dogs-form
+    (submit)="onDogsFormSubmit($event)"
+    [dogs]="dogs"
+  ></app-dogs-form>
+  <app-images-handler
+    *ngrxLet="images$ as images"
+    (addImage)="onAddImage($event)"
+    (deleteImage)="onDeleteImage($event)"
+    [images]="images"
+  ></app-images-handler>
+</ng-container>

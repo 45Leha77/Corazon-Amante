@@ -1,0 +1,37 @@
+<ng-container *ngrxLet="dogs$ as dogs">
+  <a routerLink="create">Create</a>
+  <mat-card *ngFor="let dog of dogs">
+    <mat-card-title-group>
+      <mat-card-title>{{ dog.name }}</mat-card-title>
+      <img
+        mat-card-sm-image
+        src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+      />
+    </mat-card-title-group>
+    <mat-card-content
+      >gender: {{ dog.gender }} <br />
+      dateOfBirth: {{ dog.dateOfBirth }} <br />
+      hairType: {{ dog.hairType }} <br />
+      description: {{ dog.description }} <br />
+      height: {{ dog.height }} <br />
+      isForSale:{{ dog.isForSale }} <br />
+      isForShow: {{ dog.isForShow }} <br />
+      mother: {{ dog.parents.mother }} <br />
+      father: {{ dog.parents.father }}</mat-card-content
+    >
+    <mat-card-actions>
+      <button
+        mat-raised-button
+        color="accent"
+        routerLink="edit"
+        [queryParams]="{ id: dog.id }"
+      >
+        EDIT
+      </button>
+      <button mat-raised-button color="warn" (click)="onDelete(dog.id)">
+        DELETE
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</ng-container>
+<router-outlet></router-outlet>

@@ -1,0 +1,18 @@
+<img
+  height="200"
+  width="300"
+  *ngFor="let image of images"
+  [src]="image.url | async"
+  [alt]="image.fullPath"
+  (click)="onDeleteImage(image.fullPath)"
+  loading="lazy"
+/>
+
+<input
+  type="file"
+  (change)="upload($event)"
+  accept="*.png.jpg"
+  multiple="true"
+/>
+
+<button (click)="onAddImage()" [disabled]="!file">Upload</button>

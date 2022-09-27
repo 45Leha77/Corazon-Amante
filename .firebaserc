@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "korazon-amante": {
+      "hosting": {
+        "korazon-amante": [
+          "korazon-amante"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "korazon-amante"
+  }
+}
