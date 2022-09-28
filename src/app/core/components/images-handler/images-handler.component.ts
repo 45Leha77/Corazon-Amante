@@ -18,20 +18,12 @@ import { FirebaseImage } from '../../model/firebase-image.interface';
 })
 export class ImagesHandlerComponent {
   @Input() images: FirebaseImage[] = [];
-  @Output() addImage = new EventEmitter<FileList>();
   @Output() deleteImage = new EventEmitter<string>();
 
-  protected file: FileList | null = null;
+  protected files: FileList | null = null;
 
   protected upload(event: Event): void {
-    this.file = (event.target as HTMLInputElement).files as FileList;
-  }
-
-  protected onAddImage(): void {
-    if (!this.file) {
-      return;
-    }
-    this.addImage.emit(this.file);
+    this.files = (event.target as HTMLInputElement).files as FileList;
   }
 
   protected onDeleteImage(path: string): void {

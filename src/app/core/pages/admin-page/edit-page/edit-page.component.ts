@@ -12,7 +12,11 @@ import {
   OperatorFunction,
 } from 'rxjs';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { editDog, loadDogs } from 'src/app/core/store/dogs-state/dogs.actions';
+import {
+  editDog,
+  loadDogs,
+  uploadImage,
+} from 'src/app/core/store/dogs-state/dogs.actions';
 
 @Component({
   selector: 'app-edit-page',
@@ -26,10 +30,11 @@ export class EditPageComponent implements OnInit {
     this.getIdFromRouter(),
     concatMap(([dogs, id]) => {
       const dog: IDog | undefined = dogs.find((dog: IDog) => dog.id === id);
+      this.selectedDog = dog || null;
       return of(dog as IDog);
     })
   );
-  private selectedDogId: string | null = null;
+  private selectedDog: IDog | null = null;
   constructor(private store: Store, private route: ActivatedRoute) {}
   ngOnInit(): void {
     this.store.dispatch(loadDogs());
@@ -38,9 +43,20 @@ export class EditPageComponent implements OnInit {
   protected onDogsFormSubmit(dog: IDog): void {
     const dogWithId: IDog = {
       ...dog,
-      id: this.selectedDogId as string,
+      id: this.selectedDog?.id as string,
+      children: this.selectedDog?.children as string[],
     };
     this.store.dispatch(editDog({ dog: dogWithId }));
+    this.uploadDogImages(dogWithId);
+  }
+
+  private uploadDogImages(dog: IDog): void {
+    if (!dog.images || dog.images.length < 1) {
+      return;
+    }
+    dog.images.forEach((image: File) => {
+      this.store.dispatch(uploadImage({ image, dog }));
+    });
   }
 
   private getIdFromRouter(): OperatorFunction<IDog[], [IDog[], string]> {
@@ -48,9 +64,6 @@ export class EditPageComponent implements OnInit {
       this.route.queryParamMap.pipe(
         map((params: ParamMap): string => {
           return params.get('id')!;
-        }),
-        tap((id: string) => {
-          this.selectedDogId = id;
         })
       )
     );

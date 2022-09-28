@@ -8,6 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 
+import { NgxMatFileInputModule } from '@angular-material-components/file-input';
+
 @NgModule({
   imports: [
     MatFormFieldModule,
@@ -18,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    NgxMatFileInputModule,
   ],
   exports: [
     MatFormFieldModule,
@@ -28,6 +31,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    NgxMatFileInputModule,
   ],
   declarations: [],
   providers: [],

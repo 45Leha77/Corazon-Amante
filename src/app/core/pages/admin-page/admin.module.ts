@@ -10,6 +10,7 @@ import { CreateDogPageComponent } from './create-dog-page/create-dog-page.compon
 import { EditPageComponent } from './edit-page/edit-page.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { ImagesHandlerComponent } from '../../components/images-handler/images-handler.component';
+import { NgImageSliderModule } from 'ng-image-slider';
 
 @NgModule({
   declarations: [AdminPageComponent, CreateDogPageComponent, EditPageComponent],

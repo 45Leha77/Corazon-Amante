@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IDog } from '../../../model/dogs.interface';
 import { select, Store } from '@ngrx/store';
-import { createDog } from '../../../store/dogs-state/dogs.actions';
+import { createDog, uploadImage } from '../../../store/dogs-state/dogs.actions';
 import { getDogs } from '../../../store/dogs-state/dogs.selector';
 import { Observable } from 'rxjs/internal/Observable';
 import { FirebaseStorageService } from 'src/app/core/services/firebase/storage/storage.service';
@@ -21,17 +21,21 @@ export class CreateDogPageComponent {
 
   constructor(private store: Store, private storage: FirebaseStorageService) {}
 
-  protected onDogsFormSubmit(selectedDog: IDog) {
-    this.store.dispatch(createDog({ dog: selectedDog }));
-  }
-
-  public onAddImage(file: FileList): void {
-    Array.from(file).forEach((el: File) => {
-      this.storage.uploadImage(el);
-    });
-  }
-
   public onDeleteImage(path: string): void {
     this.storage.deleteImage(path);
+  }
+
+  protected onDogsFormSubmit(selectedDog: IDog): void {
+    this.store.dispatch(createDog({ dog: selectedDog }));
+    this.uploadDogImages(selectedDog);
+  }
+
+  private uploadDogImages(dog: IDog): void { // make shared directive 
+    if (!dog.images || dog.images.length < 1) {
+      return;
+    }
+    dog.images.forEach((image: File) => {
+      this.store.dispatch(uploadImage({ image, dog }));
+    });
   }
 }

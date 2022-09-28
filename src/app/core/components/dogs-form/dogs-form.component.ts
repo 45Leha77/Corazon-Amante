@@ -45,7 +45,7 @@ export class DogsFormComponent implements OnChanges {
   @Input() dogs: IDog[] = [];
   @Input() selectedDog: IDog | null = null;
 
-  protected isForSale: boolean = false;
+  protected isForSale: boolean = this.selectedDog?.isForSale || false;
   private today: Date = new Date();
   protected form: FormGroup<CreateDogForm> = new FormGroup({
     name: new FormControl<string>('', [Validators.required]),
@@ -61,34 +61,69 @@ export class DogsFormComponent implements OnChanges {
       CustomValidators.isNumber,
     ]),
     isForSale: new FormControl<boolean>(false),
-    price: new FormControl<string>({ value: '', disabled: false }, [
+    price: new FormControl<string>({ value: '', disabled: !this.isForSale }, [
       Validators.minLength(2),
       CustomValidators.isNumber,
     ]),
-    isForShow: new FormControl<boolean>({ value: false, disabled: false }),
-    mother: new FormControl<IDog | string>({ value: 'other', disabled: false }),
-    father: new FormControl<IDog | string>({ value: 'other', disabled: false }),
+    isForShow: new FormControl<boolean>({
+      value: false,
+      disabled: !this.isForSale,
+    }),
+    mother: new FormControl<IDog | string>({
+      value: 'other',
+      disabled: !this.isForSale,
+    }),
+    father: new FormControl<IDog | string>({
+      value: 'other',
+      disabled: !this.isForSale,
+    }),
+    images: new FormControl<File[]>([]),
   });
 
   protected onFormSubmit(event: Event): void {
     event.stopPropagation();
-    this.submit.emit(this.getDogWithParentsAndChildren(this.form));
+    this.submit.emit(this.getUpdatedDog(this.form));
   }
 
   protected toggleIsForSale(): void {
     this.isForSale = !this.isForSale;
   }
 
-  private getDogWithParentsAndChildren(dog: FormGroup<CreateDogForm>): IDog { // change name
-    const { mother, father, ...dogForm } = dog.value;
+  private getUpdatedDog(dogFormValue: FormGroup<CreateDogForm>): IDog {
+    const dog: IDog = this.getDogWithParentsAndChildren(dogFormValue);
+    return this.getDogWithImagesPaths(dog);
+  }
+
+  private getDogWithParentsAndChildren(
+    dogFormValue: FormGroup<CreateDogForm>
+  ): IDog {
+    const { mother, father, ...dogForm } = dogFormValue.value;
     return {
       ...dogForm,
       parents: {
         mother: this.form.value.mother || null,
         father: this.form.value.father || null,
       },
-      children: []
+      children: [],
     } as IDog;
+  }
+
+  private getDogWithImagesPaths(dog: IDog): IDog {
+    const imagesPaths: string[] | [] = this.mapDogImgIntoPaths(dog);
+    return {
+      ...dog,
+      imagesPaths,
+    };
+  }
+
+  private mapDogImgIntoPaths(dog: IDog): string[] | [] {
+    if (dog.images && dog.images.length > 0) {
+      return dog.images.map((image: File) => {
+        const fullPath: string = `dogs/${dog.name}/${image.name}`;
+        return fullPath;
+      });
+    }
+    return [];
   }
 
   private updateForm(data: IDog): void {
@@ -102,8 +137,8 @@ export class DogsFormComponent implements OnChanges {
       isForSale: data.isForSale,
       isForShow: data.isForShow,
       price: data.price,
-      father: data.parents?.father,
-      mother: data.parents?.mother,
+      father: data.parents.father,
+      mother: data.parents.mother,
     });
   }
 }

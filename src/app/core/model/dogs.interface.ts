@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export type Gender = 'male' | 'female';
 export type HairType = 'hairless' | 'coated';
 
@@ -10,7 +12,9 @@ export interface IDog {
   description?: string;
   height?: string;
   children: Array<string> | [];
-  images?: string[];
+  images: File[] | [];
+  imagesPaths: string[] | [];
+  imagesRef: Observable<string>[] | [];
   isForSale: boolean;
   price?: string;
   isForShow?: boolean;

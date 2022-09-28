@@ -18,6 +18,9 @@ export const DELETE_DOG_SUCCESS = `${stateTitle} delete dog success`;
 export const UPDATE_DOGS_CHILDREN = `${stateTitle} update dog's children`;
 export const UPDATE_DOGS_CHILDREN_SUCCESS = `${stateTitle} update dog's children success`;
 
+export const UPLOAD_IMAGE = `${stateTitle} upload image`;
+export const UPLOAD_IMAGE_SUCCESS = `${stateTitle} upload image success`;
+
 export const loadDogs = createAction(LOAD_DOGS);
 export const loadDogsSuccess = createAction(
   LOAD_DOGS_SUCCESS,
@@ -50,6 +53,12 @@ export const updateDogsChildrenSuccess = createAction(
   UPDATE_DOGS_CHILDREN_SUCCESS,
   props<{ dog: IDog }>()
 );
+
+export const uploadImage = createAction(
+  UPLOAD_IMAGE,
+  props<{ image: File; dog: IDog }>()
+);
+export const uploadImageSuccess = createAction(UPLOAD_IMAGE_SUCCESS);
 
 export const dummyAction = createAction('[dummy action]');
 

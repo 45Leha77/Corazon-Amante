@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormArray, FormControl } from '@angular/forms';
 import { Gender, HairType, IDog } from './dogs.interface';
 
 export interface CreateDogForm {
@@ -13,4 +13,5 @@ export interface CreateDogForm {
   isForShow: FormControl<boolean | null>;
   mother: FormControl<string | IDog | null>;
   father: FormControl<string | IDog | null>;
+  images: FormControl<any>;
 }

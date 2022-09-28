@@ -24,8 +24,8 @@ export class FirebaseStorageService {
   private storage = getStorage();
   private dogsRef = ref(this.storage, 'dogs');
 
-  public getImageURLByPath(title: string): Observable<string> {
-    return from(getDownloadURL(ref(this.storage, title)));
+  public getImageURLByPath(path: string): Observable<string> {
+    return from(getDownloadURL(ref(this.storage, path)));
   }
 
   public getAllImagesURLs(): Observable<FirebaseImage[]> {
@@ -43,8 +43,8 @@ export class FirebaseStorageService {
     );
   }
 
-  public uploadImage(file: File): Observable<UploadResult> {
-    const uploadPath = ref(this.storage, `dogs/${this.setRandomString()}`);
+  public uploadImage(file: File, dbFolder: string): Observable<UploadResult> {
+    const uploadPath = ref(this.storage, `dogs/${dbFolder}/${file.name}`);
     return from(uploadBytes(uploadPath, file));
   }
 
@@ -59,9 +59,5 @@ export class FirebaseStorageService {
         return list.items;
       })
     );
-  }
-
-  private setRandomString(): string {
-    return (Math.random() * Math.random() * 10000).toString(36);
   }
 }

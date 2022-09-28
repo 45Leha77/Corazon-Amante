@@ -14,17 +14,22 @@ import {
   noParentsToUpdate,
   updateDogsChildren,
   updateDogsChildrenSuccess,
+  uploadImage,
+  uploadImageSuccess,
 } from './dogs.actions';
 import { FirebaseDogsService } from '../../services/firebase/realtime-db/http.service';
+import { FirebaseStorageService } from 'src/app/core/services/firebase/storage/storage.service';
 import { IDog } from '../../model/dogs.interface';
 import { select, Store } from '@ngrx/store';
 import { getDogs } from './dogs.selector';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Injectable({ providedIn: 'root' })
 export class DogsEffects {
   constructor(
     private readonly actions$: Actions,
     private readonly httpService: FirebaseDogsService,
+    private readonly imageStorage: FirebaseStorageService,
     private readonly store: Store
   ) {}
 
@@ -68,7 +73,7 @@ export class DogsEffects {
       ofType(editDog),
       mergeMap((action) => {
         return this.httpService.editDog(action.dog).pipe(
-          map((response) => {
+          map(() => {
             return editDogSuccess({ dog: action.dog });
           })
         );
@@ -138,6 +143,21 @@ export class DogsEffects {
             });
           })
         );
+      })
+    );
+  });
+
+  public uploadImages$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(uploadImage),
+      mergeMap((action) => {
+        return this.imageStorage
+          .uploadImage(action.image, action.dog.name)
+          .pipe(
+            map(() => {
+              return uploadImageSuccess();
+            })
+          );
       })
     );
   });

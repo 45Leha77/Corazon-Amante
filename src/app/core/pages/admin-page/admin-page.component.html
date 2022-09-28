@@ -3,22 +3,30 @@
   <mat-card *ngFor="let dog of dogs">
     <mat-card-title-group>
       <mat-card-title>{{ dog.name }}</mat-card-title>
-      <img
-        mat-card-sm-image
-        src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-      />
+      <!-- <img mat-card-sm-image [src]="dog.imagesRef[0] | async" provide adding profile picture /> -->
     </mat-card-title-group>
-    <mat-card-content
-      >gender: {{ dog.gender }} <br />
-      dateOfBirth: {{ dog.dateOfBirth }} <br />
-      hairType: {{ dog.hairType }} <br />
-      description: {{ dog.description }} <br />
-      height: {{ dog.height }} <br />
-      isForSale:{{ dog.isForSale }} <br />
-      isForShow: {{ dog.isForShow }} <br />
-      mother: {{ dog.parents.mother }} <br />
-      father: {{ dog.parents.father }}</mat-card-content
-    >
+    <mat-card-content>
+      <div>
+        gender: {{ dog.gender }} <br />
+        dateOfBirth: {{ dog.dateOfBirth }} <br />
+        hairType: {{ dog.hairType }} <br />
+        description: {{ dog.description }} <br />
+        height: {{ dog.height }} <br />
+        isForSale:{{ dog.isForSale }} <br />
+        isForShow: {{ dog.isForShow }} <br />
+        mother: {{ dog.parents.mother }} <br />
+        father: {{ dog.parents.father }}
+      </div>
+      <div>
+        <img
+          *ngFor="let ref of dog.imagesRef; let index = index"
+          [src]="ref | async"
+          [alt]="dog.imagesPaths[index]"
+          width="300"
+          height="200"
+        />
+      </div>
+    </mat-card-content>
     <mat-card-actions>
       <button
         mat-raised-button

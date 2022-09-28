@@ -93,6 +93,16 @@
       </mat-select>
     </mat-form-field>
   </div>
+  
+  <mat-form-field>
+    <ngx-mat-file-input
+      formControlName="images"
+      [multiple]="true"
+      color="primary"
+      accept="*.png.jpg"
+    >
+    </ngx-mat-file-input>
+  </mat-form-field>
 
   <button mat-raised-button color="primary" [disabled]="!form.valid">
     Submit
