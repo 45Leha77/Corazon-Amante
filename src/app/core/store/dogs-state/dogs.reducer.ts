@@ -6,6 +6,7 @@ import {
   editDogSuccess,
   loadDogsSuccess,
   updateDogsChildrenSuccess,
+  uploadImageSuccess,
 } from './dogs.actions';
 import { DogsState, initialState } from './dogs.state';
 
@@ -34,7 +35,7 @@ const _dogsReducer = createReducer(
   }),
   on(deleteDogSuccess, (state, action) => {
     const updatedDogs: IDog[] = state.dogs.filter(
-      (dog: IDog) => dog.id !== action.id
+      (dog: IDog) => dog.id !== action.dog.id
     );
     return {
       ...state,

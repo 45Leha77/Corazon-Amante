@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { IDog } from 'src/app/core/model/dogs.interface';
+import { IDog, Image } from 'src/app/core/model/dogs.interface';
 import { getDogs } from 'src/app/core/store/dogs-state/dogs.selector';
 import {
   Observable,
@@ -54,8 +54,8 @@ export class EditPageComponent implements OnInit {
     if (!dog.images || dog.images.length < 1) {
       return;
     }
-    dog.images.forEach((image: File) => {
-      this.store.dispatch(uploadImage({ image, dog }));
+    dog.images.forEach((image: Image) => {
+      this.store.dispatch(uploadImage({ image: image, dog }));
     });
   }
 

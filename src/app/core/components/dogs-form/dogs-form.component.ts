@@ -15,7 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { Gender, HairType, IDog } from '../../model/dogs.interface';
+import { Gender, HairType, IDog, Image } from '../../model/dogs.interface';
 import { DisableFormControlDirective } from 'src/app/shared/directives/disable-form-control.directive';
 import { CustomValidators } from '../../validators/form-validators';
 import { FilterArrayByObjectPropertyPipe } from 'src/app/shared/pipes/filter-array-by.pipe';
@@ -61,22 +61,13 @@ export class DogsFormComponent implements OnChanges {
       CustomValidators.isNumber,
     ]),
     isForSale: new FormControl<boolean>(false),
-    price: new FormControl<string>({ value: '', disabled: !this.isForSale }, [
+    price: new FormControl<string>('', [
       Validators.minLength(2),
       CustomValidators.isNumber,
     ]),
-    isForShow: new FormControl<boolean>({
-      value: false,
-      disabled: !this.isForSale,
-    }),
-    mother: new FormControl<IDog | string>({
-      value: 'other',
-      disabled: !this.isForSale,
-    }),
-    father: new FormControl<IDog | string>({
-      value: 'other',
-      disabled: !this.isForSale,
-    }),
+    isForShow: new FormControl<boolean>(false),
+    mother: new FormControl<IDog | string>('other'),
+    father: new FormControl<IDog | string>('other'),
     images: new FormControl<File[]>([]),
   });
 
@@ -109,18 +100,18 @@ export class DogsFormComponent implements OnChanges {
   }
 
   private getDogWithImagesPaths(dog: IDog): IDog {
-    const imagesPaths: string[] | [] = this.mapDogImgIntoPaths(dog);
+    const images: Image[] | [] = this.mapDogImgIntoPaths(dog);
     return {
       ...dog,
-      imagesPaths,
+      images,
     };
   }
 
-  private mapDogImgIntoPaths(dog: IDog): string[] | [] {
+  private mapDogImgIntoPaths(dog: any): Image[] | [] {
     if (dog.images && dog.images.length > 0) {
       return dog.images.map((image: File) => {
         const fullPath: string = `dogs/${dog.name}/${image.name}`;
-        return fullPath;
+        return { imageFile: image, path: fullPath };
       });
     }
     return [];

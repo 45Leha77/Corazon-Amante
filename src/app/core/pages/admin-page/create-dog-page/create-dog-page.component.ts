@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IDog } from '../../../model/dogs.interface';
+import { IDog, Image } from '../../../model/dogs.interface';
 import { select, Store } from '@ngrx/store';
 import { createDog, uploadImage } from '../../../store/dogs-state/dogs.actions';
 import { getDogs } from '../../../store/dogs-state/dogs.selector';
@@ -30,11 +30,12 @@ export class CreateDogPageComponent {
     this.uploadDogImages(selectedDog);
   }
 
-  private uploadDogImages(dog: IDog): void { // make shared directive 
+  private uploadDogImages(dog: IDog): void {
+    // make shared directive
     if (!dog.images || dog.images.length < 1) {
       return;
     }
-    dog.images.forEach((image: File) => {
+    dog.images.forEach((image: Image) => {
       this.store.dispatch(uploadImage({ image, dog }));
     });
   }

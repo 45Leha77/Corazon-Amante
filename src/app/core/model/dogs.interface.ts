@@ -12,9 +12,7 @@ export interface IDog {
   description?: string;
   height?: string;
   children: Array<string> | [];
-  images: File[] | [];
-  imagesPaths: string[] | [];
-  imagesRef: Observable<string>[] | [];
+  images: Image[] | [];
   isForSale: boolean;
   price?: string;
   isForShow?: boolean;
@@ -22,4 +20,10 @@ export interface IDog {
     mother: IDog | string;
     father: IDog | string;
   };
+}
+
+export interface Image {
+  imageFile: File;
+  path: string;
+  ref?: Observable<string>;
 }

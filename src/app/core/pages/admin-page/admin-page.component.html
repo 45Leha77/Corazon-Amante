@@ -17,15 +17,14 @@
         mother: {{ dog.parents.mother }} <br />
         father: {{ dog.parents.father }}
       </div>
-      <div>
-        <img
-          *ngFor="let ref of dog.imagesRef; let index = index"
-          [src]="ref | async"
-          [alt]="dog.imagesPaths[index]"
-          width="300"
-          height="200"
-        />
-      </div>
+      <ng-container *ngFor="let image of dog.images; let index = index">
+        <div *ngIf="image.ref | async as ref">
+          <img [src]="ref" [alt]="image.path" width="300" height="200" />
+          <button mat-raised-button color="warn" (click)="onImageDelete(image)">
+            X
+          </button>
+        </div>
+      </ng-container>
     </mat-card-content>
     <mat-card-actions>
       <button
@@ -36,7 +35,7 @@
       >
         EDIT
       </button>
-      <button mat-raised-button color="warn" (click)="onDelete(dog.id)">
+      <button mat-raised-button color="warn" (click)="onDogDelete(dog)">
         DELETE
       </button>
     </mat-card-actions>

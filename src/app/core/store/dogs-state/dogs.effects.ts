@@ -6,6 +6,10 @@ import {
   createDogSuccess,
   deleteDog,
   deleteDogSuccess,
+  deleteImage,
+  deleteImageFromStorage,
+  deleteImageFromStorageSuccess,
+  deleteImageSuccess,
   dummyAction,
   editDog,
   editDogSuccess,
@@ -19,10 +23,10 @@ import {
 } from './dogs.actions';
 import { FirebaseDogsService } from '../../services/firebase/realtime-db/http.service';
 import { FirebaseStorageService } from 'src/app/core/services/firebase/storage/storage.service';
-import { IDog } from '../../model/dogs.interface';
+import { IDog, Image } from '../../model/dogs.interface';
 import { select, Store } from '@ngrx/store';
 import { getDogs } from './dogs.selector';
-import { Action } from 'rxjs/internal/scheduler/Action';
+import { DogModificationService } from './dog-modification.service';
 
 @Injectable({ providedIn: 'root' })
 export class DogsEffects {
@@ -30,7 +34,8 @@ export class DogsEffects {
     private readonly actions$: Actions,
     private readonly httpService: FirebaseDogsService,
     private readonly imageStorage: FirebaseStorageService,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly dogModification: DogModificationService
   ) {}
 
   public loadDogs$ = createEffect(() => {
@@ -40,6 +45,8 @@ export class DogsEffects {
       mergeMap(([action, dogs]) => {
         if (dogs.length < 2) {
           return this.httpService.getDogs().pipe(
+            this.dogModification.getDataAsArray(),
+            this.dogModification.updateDogWithImgRef(),
             map((dogs: IDog[]) => {
               return loadDogsSuccess({ dogs });
             })
@@ -85,9 +92,9 @@ export class DogsEffects {
     return this.actions$.pipe(
       ofType(deleteDog),
       mergeMap((action) => {
-        return this.httpService.deleteDog(action.id).pipe(
+        return this.httpService.deleteDog(action.dog.id).pipe(
           map(() => {
-            return deleteDogSuccess({ id: action.id });
+            return deleteDogSuccess({ dog: action.dog });
           })
         );
       })
@@ -117,9 +124,9 @@ export class DogsEffects {
         }
         return this.httpService.editDog(action.dog).pipe(
           map(() => {
-            const parent = this.findFather(dogs, action.dog);
+            const parent = this.dogModification.findFather(dogs, action.dog);
             return updateDogsChildren({
-              dog: this.updateChildrenInDog(action.dog, parent),
+              dog: this.dogModification.updateChildrenInDog(action.dog, parent),
             });
           })
         );
@@ -137,9 +144,9 @@ export class DogsEffects {
         }
         return this.httpService.editDog(action.dog).pipe(
           map(() => {
-            const parent = this.findMother(dogs, action.dog);
+            const parent = this.dogModification.findMother(dogs, action.dog);
             return updateDogsChildren({
-              dog: this.updateChildrenInDog(action.dog, parent),
+              dog: this.dogModification.updateChildrenInDog(action.dog, parent),
             });
           })
         );
@@ -152,35 +159,61 @@ export class DogsEffects {
       ofType(uploadImage),
       mergeMap((action) => {
         return this.imageStorage
-          .uploadImage(action.image, action.dog.name)
+          .uploadImage(action.image.imageFile, action.dog.name)
           .pipe(
             map(() => {
-              return uploadImageSuccess();
+              return uploadImageSuccess({
+                dog: action.dog,
+                image: action.image,
+              });
             })
           );
       })
     );
   });
 
-  private updateChildrenInDog(selectedDog: IDog, parent: IDog): IDog {
-    if (parent.children) {
-      return {
-        ...parent,
-        children: [...parent.children, selectedDog.id as string],
-      };
-    } else {
-      return {
-        ...parent,
-        children: [selectedDog.id!],
-      };
-    }
-  }
+  public deleteImage$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(deleteImage),
+      mergeMap((action) => {
+        return this.imageStorage.deleteImage(action.image.path).pipe(
+          map(() => {
+            return deleteImageSuccess({ image: action.image });
+          })
+        );
+      })
+    );
+  });
 
-  private findFather(allDogs: IDog[], selectedDog: IDog): IDog {
-    return allDogs.find((dog) => dog.id === selectedDog.parents.father) as IDog;
-  }
+  public deleteImageRefFromDog$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(deleteImageSuccess),
+      withLatestFrom(this.store.select(getDogs)),
+      map(([action, dogs]) => {
+        let updatedDog: IDog = dogs.find((dog: IDog) =>
+          dog.images?.some((image) => image.path === action.image.path)
+        ) as IDog;
+        updatedDog = {
+          ...updatedDog,
+          images: updatedDog.images?.filter(
+            (image: Image) => image.path !== action.image.path
+          ),
+        };
+        return editDog({ dog: updatedDog });
+      })
+    );
+  });
 
-  private findMother(allDogs: IDog[], selectedDog: IDog): IDog {
-    return allDogs.find((dog) => dog.id === selectedDog.parents.mother) as IDog;
-  }
+  public deleteImageFromStorage$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(deleteImageFromStorage),
+      mergeMap((action) => {
+        return this.imageStorage.deleteImage(action.image.path).pipe(
+          map(() => {
+            return deleteImageFromStorageSuccess();
+          })
+        );
+      })
+    );
+  });
 }

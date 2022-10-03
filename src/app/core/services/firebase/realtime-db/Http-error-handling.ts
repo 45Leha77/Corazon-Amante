@@ -3,21 +3,11 @@ import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs/internal/observable/of';
 import { OperatorFunction } from 'rxjs/internal/types';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class ObservableMethodsService {
+export class HttpErrorHandler {
   constructor(private toastr: ToastrService) {}
-
-  public getDataAsArray<T>(): OperatorFunction<T[], T[]> {
-    return map((data: T[]) => {
-      const array: T[] = [];
-      for (let key in data) {
-        array.push({ ...data[key], id: key });
-      }
-      return array;
-    });
-  }
 
   public handleError(): OperatorFunction<unknown, any> {
     return catchError((err) => {
