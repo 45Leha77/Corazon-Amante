@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OperatorFunction, map } from 'rxjs';
-import { IDog, Image } from '../../model/dogs.interface';
-import { FirebaseStorageService } from '../../services/firebase/storage/storage.service';
+import { IDog, Image } from '../../../model/dogs.interface';
+import { FirebaseStorageService } from '../../../services/firebase/storage/storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class DogModificationService {
@@ -34,7 +34,7 @@ export class DogModificationService {
     });
   }
 
-  public updateChildrenInDog(selectedDog: IDog, parent: IDog): IDog {
+  public addChildrenToDog(selectedDog: IDog, parent: IDog): IDog {
     if (parent.children) {
       return {
         ...parent,
@@ -46,6 +46,13 @@ export class DogModificationService {
         children: [selectedDog.id!],
       };
     }
+  }
+
+  public deleteChildrenFromParent(children: IDog, parent: IDog): IDog {
+    return {
+      ...parent,
+      children: parent.children.filter((id: string) => children.id !== id),
+    };
   }
 
   public findFather(allDogs: IDog[], selectedDog: IDog): IDog {

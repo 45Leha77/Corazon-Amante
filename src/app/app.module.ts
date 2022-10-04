@@ -15,7 +15,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { DogsEffects } from './core/store/dogs-state/dogs.effects';
+import { DogsEffects } from './core/store/dogs-state/dogs.effects/CRUD.effects';
 import { AppReducer } from './core/store/app.state';
 import { DogsDisplayPageComponent } from './core/pages/dogs-display-page/dogs-display-page.component';
 

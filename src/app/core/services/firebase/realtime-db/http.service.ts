@@ -45,7 +45,7 @@ export class FirebaseDogsService {
   }
 
   public deleteDog(id: string) {
-    return this.http.delete(
+    return this.http.delete<IDog>(
       `https://korazon-amante-default-rtdb.firebaseio.com/dogs/${id}.json`
     );
   }

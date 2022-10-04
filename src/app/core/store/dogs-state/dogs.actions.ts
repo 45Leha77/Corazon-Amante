@@ -86,8 +86,14 @@ export const deleteImageFromStorageSuccess = createAction(
   DELETE_IMAGE_FROM_STORAGE_SUCCESS
 );
 
-export const dummyAction = createAction('[dummy action]');
+export const noContentReload = createAction(
+  `${stateTitle} no need to reload content`
+);
 
-export const noParentsToUpdate = createAction(
-  `${stateTitle} no parents to update`
+export const noFatherToUpdate = createAction(
+  `${stateTitle} no father to update`
+);
+
+export const noMotherToUpdate = createAction(
+  `${stateTitle} no mother to update`
 );
