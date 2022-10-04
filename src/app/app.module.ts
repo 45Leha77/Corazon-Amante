@@ -18,6 +18,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DogsEffects } from './core/store/dogs-state/dogs.effects/CRUD.effects';
 import { AppReducer } from './core/store/app.state';
 import { DogsDisplayPageComponent } from './core/pages/dogs-display-page/dogs-display-page.component';
+import { ChildrenSyncEffects } from './core/store/dogs-state/dogs.effects/children-sync.effects';
+import { ImagesEffects } from './core/store/dogs-state/dogs.effects/images.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,7 +35,7 @@ import { DogsDisplayPageComponent } from './core/pages/dogs-display-page/dogs-di
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     StoreModule.forRoot(AppReducer),
-    EffectsModule.forRoot([DogsEffects]),
+    EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,

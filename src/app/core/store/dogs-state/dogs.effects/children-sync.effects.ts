@@ -17,7 +17,7 @@ import { getDogs } from '../dogs.selector';
 import { DogModificationService } from './modification.service';
 
 @Injectable({ providedIn: 'root' })
-export class DogsEffects {
+export class ChildrenSyncEffects {
   constructor(
     private readonly actions$: Actions,
     private readonly httpService: FirebaseDogsService,

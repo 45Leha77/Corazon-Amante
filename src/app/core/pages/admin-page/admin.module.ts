@@ -11,6 +11,10 @@ import { EditPageComponent } from './edit-page/edit-page.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { ImagesHandlerComponent } from '../../components/images-handler/images-handler.component';
 import { NgImageSliderModule } from 'ng-image-slider';
+import { EffectsModule } from '@ngrx/effects';
+import { ChildrenSyncEffects } from '../../store/dogs-state/dogs.effects/children-sync.effects';
+import { DogsEffects } from '../../store/dogs-state/dogs.effects/CRUD.effects';
+import { ImagesEffects } from '../../store/dogs-state/dogs.effects/images.effects';
 
 @NgModule({
   declarations: [AdminPageComponent, CreateDogPageComponent, EditPageComponent],
@@ -23,6 +27,7 @@ import { NgImageSliderModule } from 'ng-image-slider';
     MatButtonModule,
     DogsFormComponent,
     ImagesHandlerComponent,
+    EffectsModule.forFeature([DogsEffects, ChildrenSyncEffects, ImagesEffects]),
   ],
 })
 export class AdminModule {}

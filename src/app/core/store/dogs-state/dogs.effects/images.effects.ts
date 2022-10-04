@@ -16,7 +16,7 @@ import { Store } from '@ngrx/store';
 import { getDogs } from '../dogs.selector';
 
 @Injectable({ providedIn: 'root' })
-export class DogsEffects {
+export class ImagesEffects {
   constructor(
     private readonly actions$: Actions,
     private readonly imageStorage: FirebaseStorageService,
